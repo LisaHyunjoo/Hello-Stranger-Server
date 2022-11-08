@@ -12,6 +12,7 @@ class User(UserMixin, Model):
     class Meta:
         database = DATABASE
 
+
 class Post(Model):
     user = ForeignKeyField(User, backref='posts')
     title = CharField()
@@ -21,8 +22,19 @@ class Post(Model):
     class Meta:
         database = DATABASE
 
+class Comment(Model):
+    user = ForeignKeyField(User, backref='comments' )
+    post = ForeignKeyField(Post, backref='comment')
+    content = CharField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = DATABASE
+
+
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User,Post], safe=True)
+    DATABASE.create_tables([User, Comment, Post], safe=True)
     print('created tables')
     DATABASE.close()

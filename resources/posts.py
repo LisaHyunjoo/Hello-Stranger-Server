@@ -6,10 +6,11 @@ from flask_login import login_required, current_user
 posts = Blueprint('posts', 'posts')
 
 @posts.route('/', methods=['POST'])
+@login_required
 def create_posts():
     payload = request.get_json()
     print(payload)
-    new_post = models.Post.create(user=current_user.id, title=payload['title'], content=payload['content'])
+    new_post = models.Post.create(user=current_user.id, title=payload['title'], content=payload['content'], comment=payload['comment'])
     print(new_post)
 
     post_dict = model_to_dict(new_post)
@@ -29,7 +30,6 @@ def posts_index():
 
     current_user_post_dicts = [model_to_dict(post) for post in current_user.posts]
 
-    # for dog_dict in dog_dicts:
     for post_dict in current_user_post_dicts:
         post_dict['user'].pop('password')
 
@@ -38,4 +38,15 @@ def posts_index():
         'message':"success",
         "status":200
     }),200
+
+@posts.route('/<id>', methods=["GET"])
+def get_one_post(id):
+    post = models.Post.get_by_id(id)
+    del post['user']['password']
+
+    return jsonify(
+        data = model_to_dict(post),
+        message = "success",
+        status = 200
+    ),200
     

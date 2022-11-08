@@ -2,6 +2,7 @@ from flask import Flask
 import models
 from resources.posts import posts
 from resources.user import user
+from resources.comments import comments
 from flask_login import LoginManager
 
 DEBUG = True
@@ -22,6 +23,7 @@ def load_user(userid):
 
 
 app.register_blueprint(posts, url_prefix='/hellostranger/posts')
+app.register_blueprint(comments, url_prefix='/hellostranger/posts')
 app.register_blueprint(user, url_prefix='/hellostranger/user')
 
 if __name__ == "__main__":
