@@ -10,7 +10,7 @@ posts = Blueprint('posts', 'posts')
 def create_posts():
     payload = request.get_json()
     print(payload)
-    new_post = models.Post.create(user=current_user.id, title=payload['title'], content=payload['content'], comment=payload['comment'])
+    new_post = models.Post.create(user=current_user.id, title=payload['title'], content=payload['content'])
     print(new_post)
 
     post_dict = model_to_dict(new_post)
@@ -42,7 +42,7 @@ def posts_index():
 @posts.route('/<id>', methods=["GET"])
 def get_one_post(id):
     post = models.Post.get_by_id(id)
-    del post['user']['password']
+    # del post['user']['password']
 
     return jsonify(
         data = model_to_dict(post),
@@ -50,3 +50,25 @@ def get_one_post(id):
         status = 200
     ),200
     
+    
+@posts.route('/<id>', methods=['DELETE'])
+def delete_post(id):
+    query = models.Post.delete().where(models.Post.id == id)
+    # print(model_to_dict(query))
+    query.execute()
+    return jsonify(
+        data = {},
+        message="post is deleted",
+        status=200
+    ), 200
+
+@posts.route('/<id>', methods=['PUT'])
+def update_post(id):
+    payload = request.get_json()
+    query = models.Post.update(**payload).where(models.Post.id == id)
+    query.execute()
+    return jsonify(
+        data = model_to_dict(models.Post.get_by_id(id)),
+        status=200,
+        message='post is updated'
+    ), 200
