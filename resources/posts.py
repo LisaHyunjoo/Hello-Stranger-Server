@@ -4,6 +4,7 @@ from playhouse.shortcuts import model_to_dict
 from flask_login import login_required, current_user
 
 posts = Blueprint('posts', 'posts')
+comments = Blueprint('comments', 'comments')
 
 @posts.route('/', methods=['POST'])
 @login_required
@@ -40,6 +41,7 @@ def posts_index():
     }),200
 
 @posts.route('/<id>', methods=["GET"])
+@login_required
 def get_one_post(id):
     post = models.Post.get_by_id(id)
     # del post['user']['password']
@@ -50,8 +52,8 @@ def get_one_post(id):
         status = 200
     ),200
     
-    
 @posts.route('/<id>', methods=['DELETE'])
+@login_required
 def delete_post(id):
     query = models.Post.delete().where(models.Post.id == id)
     # print(model_to_dict(query))

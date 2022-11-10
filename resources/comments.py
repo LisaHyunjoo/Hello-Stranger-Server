@@ -5,10 +5,9 @@ from flask_login import login_required, current_user
 
 comments = Blueprint('comments', 'comments')
 
-@comments.route("/<id>", methods=['POST'])
+@comments.route("/<id>/comment", methods=['POST'])
 @login_required
 def create_a_comment(id):
-
     payload = request.get_json()
     new_comment = models.Comment.create(user=current_user.id, 
     content=payload['content'], post=id )
@@ -24,11 +23,18 @@ def create_a_comment(id):
         status=201
     ),201
 
+@comments.route("/<id>/comment", methods=['GET'])
+def get_comments(id):
+    comments = models.Comment.select().join(models.Post).where(models.Post.id == id)
+    # print([model_to_dict(comment) for comment in comments])
+    comment_dict = [model_to_dict(comment) for comment in comments]
 
-# @comments.route("<id>", methods=['GET'])
-# def get_comments():
-    # comments = models.Comments.select()
-    # print(comments)
+    return jsonify({
+        'data':comment_dict,
+        'message':"success",
+        'stats':200
+    }), 200
+
 
     
 

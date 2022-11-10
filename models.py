@@ -24,7 +24,7 @@ class Post(Model):
 
 class Comment(Model):
     user = ForeignKeyField(User, backref='comments' )
-    post = ForeignKeyField(Post, backref='comment')
+    post = ForeignKeyField(Post, backref='comments')
     content = CharField()
     created_at = DateTimeField(default=datetime.datetime.now)
 
