@@ -8,7 +8,7 @@ comments = Blueprint('comments', 'comments')
 
 @posts.route('/', methods=['POST'])
 @login_required
-def create_posts():
+def create_a_post():
     payload = request.get_json()
     print(payload)
     new_post = models.Post.create(user=current_user.id, title=payload['title'], content=payload['content'])
@@ -25,7 +25,7 @@ def create_posts():
     ), 201
 
 @posts.route('/', methods=["GET"])
-def posts_index():
+def get_posts():
     result = models.Post.select()
     print(result)
 
@@ -40,10 +40,10 @@ def posts_index():
         "status":200
     }),200
 
-@posts.route('/<id>', methods=["GET"])
+@posts.route('/<int:post_id>', methods=["GET"])
 @login_required
-def get_one_post(id):
-    post = models.Post.get_by_id(id)
+def get_one_post(post_id):
+    post = models.Post.get_by_id(post_id)
     # del post['user']['password']
 
     return jsonify(
@@ -52,10 +52,10 @@ def get_one_post(id):
         status = 200
     ),200
     
-@posts.route('/<id>', methods=['DELETE'])
+@posts.route('/<int:post_id>', methods=['DELETE'])
 @login_required
-def delete_post(id):
-    query = models.Post.delete().where(models.Post.id == id)
+def delete_a_post(post_id):
+    query = models.Post.delete().where(models.Post.id == post_id)
     # print(model_to_dict(query))
     query.execute()
     return jsonify(
@@ -64,13 +64,13 @@ def delete_post(id):
         status=200
     ), 200
 
-@posts.route('/<id>', methods=['PUT'])
-def update_post(id):
+@posts.route('/<int:post_id>', methods=['PUT'])
+def update_a_post(post_id):
     payload = request.get_json()
-    query = models.Post.update(**payload).where(models.Post.id == id)
+    query = models.Post.update(**payload).where(models.Post.id == post_id)
     query.execute()
     return jsonify(
-        data = model_to_dict(models.Post.get_by_id(id)),
+        data = model_to_dict(models.Post.get_by_id(post_id)),
         status=200,
         message='post is updated'
     ), 200

@@ -5,12 +5,12 @@ from flask_login import login_required, current_user
 
 comments = Blueprint('comments', 'comments')
 
-@comments.route("/<id>/comment", methods=['POST'])
+@comments.route("/<int:post_id>/comment", methods=['POST'])
 @login_required
-def create_a_comment(id):
+def create_a_comment(post_id):
     payload = request.get_json()
     new_comment = models.Comment.create(user=current_user.id, 
-    content=payload['content'], post=id )
+    content=payload['content'], post=post_id )
     comment_dict = model_to_dict(new_comment)
 
     del comment_dict['user']['password']
@@ -23,9 +23,9 @@ def create_a_comment(id):
         status=201
     ),201
 
-@comments.route("/<id>/comment", methods=['GET'])
-def get_comments(id):
-    comments = models.Comment.select().join(models.Post).where(models.Post.id == id)
+@comments.route("/<int:post_id>/comment", methods=['GET'])
+def get_comments(post_id):
+    comments = models.Comment.select().join(models.Post).where(models.Post.id == post_id)
     # print([model_to_dict(comment) for comment in comments])
     comment_dict = [model_to_dict(comment) for comment in comments]
 
@@ -35,6 +35,26 @@ def get_comments(id):
         'stats':200
     }), 200
 
+@comments.route('/<int:post_id>/comment/<int:comment_id>', methods=['DELETE'])
+@login_required
+def delete_comment(post_id, comment_id):
+    query = models.Comment.delete().where(models.Post.id == post_id and models.Comment.id == comment_id)
+    query.execute()
+    return jsonify(
+        data = {},
+        message="comment is deleted",
+        status=200
+    ), 200
 
+@comments.route('/<int:post_id>/comment/<int:comment_id>', methods=['PUT'])
+def update_a_comment(post_id, comment_id):
+    payload = request.get_json()
+    query = models.Comment.update(**payload).where(models.Post.id == post_id and models.Comment.id == comment_id)
+    query.execute()
+    return jsonify(
+        data = model_to_dict(models.Comment.get_by_id(comment_id)),
+        status=200,
+        message='post is updated'
+    ), 200
     
 
