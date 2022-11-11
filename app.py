@@ -4,11 +4,14 @@ from resources.posts import posts
 from resources.user import user
 from resources.comments import comments
 from flask_login import LoginManager
+from flask_cors import CORS
 
 DEBUG = True
 PORT = 8000
 
 app = Flask(__name__)
+
+CORS(user, origins=['http://localhost:3000'], supports_credentials=True)
 
 app.secret_key="LJAKLJLKJJLJKLSDJLKJASD"
 login_manager = LoginManager()
