@@ -14,11 +14,12 @@ PORT = os.environ.get("PORT")
 
 app = Flask(__name__)
 
-CORS(user, origins=['http://localhost:3000','http://hello-stranger-demo.herokuapp.com'], supports_credentials=True)
-CORS(posts, origins=['http://localhost:3000','http://hello-stranger-demo.herokuapp.com'], supports_credentials=True)
-CORS(comments,  origins=['http://localhost:3000','http://hello-stranger-demo.herokuapp.com'], supports_credentials=True)
+CORS(user, origins=['https://hello-stranger-application.herokuapp.com/','http://localhost:3000'], supports_credentials=True)
+CORS(posts, origins=['https://hello-stranger-application.herokuapp.com/','http://localhost:3000'], supports_credentials=True)
+CORS(comments,  origins=['https://hello-stranger-application.herokuapp.com/','http://localhost:3000'], supports_credentials=True)
 
 app.secret_key=os.environ.get("APP_SECRET")
+
 app.config.update(
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
@@ -26,7 +27,6 @@ app.config.update(
 )
 
 login_manager = LoginManager()
-
 login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(userid):
