@@ -9,6 +9,7 @@ comments = Blueprint('comments', 'comments')
 @login_required
 def create_a_comment(post_id):
     payload = request.get_json()
+    print(payload)
     new_comment = models.Comment.create(user=current_user.id, 
     content=payload['content'], post=post_id )
     comment_dict = model_to_dict(new_comment)

@@ -14,11 +14,17 @@ PORT = os.environ.get("PORT")
 
 app = Flask(__name__)
 
-CORS(user, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(posts, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(comments,  origins=['http://localhost:3000'], supports_credentials=True)
+CORS(user, origins=['http://localhost:3000','http://hello-stranger-demo.herokuapp.com'], supports_credentials=True)
+CORS(posts, origins=['http://localhost:3000','http://hello-stranger-demo.herokuapp.com'], supports_credentials=True)
+CORS(comments,  origins=['http://localhost:3000','http://hello-stranger-demo.herokuapp.com'], supports_credentials=True)
 
 app.secret_key=os.environ.get("APP_SECRET")
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='None',
+)
+
 login_manager = LoginManager()
 
 login_manager.init_app(app)
@@ -30,9 +36,9 @@ def load_user(userid):
         return None
 
 
-app.register_blueprint(posts, url_prefix='/hellostranger/posts')
-app.register_blueprint(comments, url_prefix='/hellostranger/posts')
-app.register_blueprint(user, url_prefix='/hellostranger/user')
+app.register_blueprint(posts, url_prefix='/posts')
+app.register_blueprint(comments, url_prefix='/posts')
+app.register_blueprint(user, url_prefix='/user')
 
 @app.before_request
 def before_request():
