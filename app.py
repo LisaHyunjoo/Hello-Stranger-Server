@@ -30,9 +30,9 @@ def load_user(userid):
         return None
 
 
-app.register_blueprint(posts, url_prefix='/posts')
-app.register_blueprint(comments, url_prefix='/posts')
-app.register_blueprint(user, url_prefix='/user')
+app.register_blueprint(posts, url_prefix='/api/v1/posts')
+app.register_blueprint(comments, url_prefix='/api/v1/posts')
+app.register_blueprint(user, url_prefix='/api/v1/user')
 
 @app.before_request
 def before_request():
