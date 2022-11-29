@@ -21,9 +21,6 @@ class User(UserMixin, Model):
 class Post(Model):
     user = ForeignKeyField(User, backref='posts')
     title = CharField()
-    country = CharField()
-    # state = CharField()
-    # city = CharField()
     content = TextField()
     created_at = DateTimeField(default=datetime.datetime.now)
 

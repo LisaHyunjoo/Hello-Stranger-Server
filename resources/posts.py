@@ -12,8 +12,6 @@ def create_a_post():
     payload = request.get_json()
     print(payload)
     new_post = models.Post.create(user=current_user.id, title=payload['title'], 
-    country=payload['country'], 
-    # state=payload['state'], city=payload['city'], 
     content=payload['content'])
     print(new_post)
 
